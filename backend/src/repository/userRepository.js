@@ -1,4 +1,4 @@
-import User from "../schema/userSchema.js";
+import { User } from "../schema/userSchema.js";
 
 // async function findUser(parameters) {
 //     try {
