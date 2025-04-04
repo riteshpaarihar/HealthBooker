@@ -11,8 +11,8 @@ app.use(express.json());
 app.use(express.text());
 app.use(cookieParser());
 
-// Enable CORS for all origins (Temporary Fix)
-app.use(cors());
+// // Enable CORS for all origins (Temporary Fix)
+// app.use(cors());
 
 // ✅ More Secure: Allow only specific frontend origin
 app.use(
@@ -23,6 +23,7 @@ app.use(
         allowedHeaders: "Content-Type, Authorization",
     })
 );
+
 
 // Import routes 
 app.use('/api', apiRoutes);
