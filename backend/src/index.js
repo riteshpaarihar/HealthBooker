@@ -14,6 +14,10 @@ app.use(cookieParser());
 // Import routes 
 app.use('/api', apiRoutes);
 
+app.use('/', (req, res) => {
+    res.send('Welcome to HealthBooker API');
+})
+
 app.listen(PORT, async() => {
     // Connect to MongoDB database
     await connectDB();
