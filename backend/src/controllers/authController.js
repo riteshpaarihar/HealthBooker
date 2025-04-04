@@ -4,6 +4,7 @@ async function login(req, res) {
     try {
         const payload = req.body;
         const responce = await loginUser(payload);
+        const result = await loginUser(req.body);
         res.cookie("auth_token", responce, {
             httpOnly: true,
             secure: true,
@@ -12,7 +13,7 @@ async function login(req, res) {
         return res.status(200).json({
             success: true,
             message: "User logged in successfully",
-            data: {},
+            data: result,
             error: {}
         })
     } catch (error) {
