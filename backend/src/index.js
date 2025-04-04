@@ -17,9 +17,10 @@ app.use(cors());
 // ✅ More Secure: Allow only specific frontend origin
 app.use(
     cors({
-        origin: "http://localhost:5173", // Allow requests from Vite frontend
-        methods: "GET,POST,PUT,DELETE",
-        allowedHeaders: "Content-Type,Authorization",
+        origin: "http://localhost:5173", // Allow frontend
+        credentials: true, // ✅ Allow credentials (cookies, auth headers)
+        methods: "GET, POST, PUT, DELETE",
+        allowedHeaders: "Content-Type, Authorization",
     })
 );
 
