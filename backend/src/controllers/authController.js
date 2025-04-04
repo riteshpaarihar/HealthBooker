@@ -54,7 +54,8 @@ async function login(req, res) {
             success: true,
             message: "User logged in successfully",
             token: response.token,
-            data: response.user,
+            // data: response.user,
+            data: { user: response.user }
         });
 
     } catch (error) {
