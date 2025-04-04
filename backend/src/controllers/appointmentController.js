@@ -18,6 +18,26 @@ async function getAppointments(req, res) {
     }
 }
 
+async function getAppointmentsonlyuser(req, res) {
+    try {
+        const userId = req.user.id; // Get logged-in user's ID from token
+        const appointments = await getAllAppointments({ patient: userId }); // Filter by user ID
+
+        return res.status(200).json({
+            success: true,
+            message: "Appointments retrieved successfully",
+            data: appointments,
+        });
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: "Failed to fetch appointments",
+            error: error.message,
+        });
+    }
+}
+
+
 // Book an appointment
 async function bookAppointment(req, res) {
     try {
@@ -45,4 +65,4 @@ async function bookAppointment(req, res) {
     }
 }
 
-export { getAppointments, bookAppointment };
+export { getAppointments, bookAppointment, getAppointmentsonlyuser };
