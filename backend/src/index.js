@@ -15,14 +15,26 @@ app.use(cookieParser());
 // app.use(cors());
 
 // ✅ More Secure: Allow only specific frontend origin
+// app.use(
+//     cors({
+//         origin: "http://localhost:5173", // Allow frontend
+//         credentials: true, // ✅ Allow credentials (cookies, auth headers)
+//         methods: "GET, POST, PUT, DELETE",
+//         allowedHeaders: "Content-Type, Authorization",
+//     })
+// );
 app.use(
     cors({
-        origin: "http://localhost:5173", // Allow frontend
-        credentials: true, // ✅ Allow credentials (cookies, auth headers)
+        origin: [
+            "http://localhost:5173", // ✅ Local frontend
+            "https://health-booker-nine.vercel.app" // ✅ Update with your live frontend URL
+        ],
+        credentials: true, // ✅ Allows cookies/auth headers
         methods: "GET, POST, PUT, DELETE",
         allowedHeaders: "Content-Type, Authorization",
     })
 );
+
 
 
 // Import routes 
