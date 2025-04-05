@@ -1,25 +1,55 @@
+// import axios from "axios";
+
+// const API_BASE_URL =
+//     import.meta.env.VITE_API_URL || "https://healthbooker.up.railway.app/api";
+
+// const axiosInstance = axios.create({
+//     baseURL: API_BASE_URL,
+//     headers: {
+//         "Content-Type": "application/x-www-form-urlencoded",
+//     },
+//     withCredentials: true, // Ensure credentials (cookies, etc.) are sent
+// });
+
+
+// // ✅ Automatically add the token to every request
+// axiosInstance.interceptors.request.use(
+//     (config) => {
+//         const token = localStorage.getItem("token"); // Retrieve token
+//         if (token) {
+//             config.headers.Authorization = `Bearer ${token}`; // Attach token
+//         }
+//         return config;
+//     },
+//     (error) => Promise.reject(error)
+// );
+// export default axiosInstance;
+
+
 import axios from "axios";
 
-// Create an Axios instance with base URL
+const API_BASE_URL =
+    import.meta.env.VITE_API_URL || "https://healthbooker.up.railway.app/api";
+
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:5000",
-  headers: {
-    "Content-Type": "application/json",
-  },
+    baseURL: API_BASE_URL,
+    headers: {
+        "Content-Type": "application/json",
+    },
+    withCredentials: true, // ✅ Ensures cookies are sent
 });
 
-// Add a request interceptor (Optional: for authentication tokens)
-axiosInstance.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem("token"); // Get token from local storage
-    if (token) {
-      config.headers["Authorization"] = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
+// ✅ Automatically attach token to every request
+// axiosInstance.interceptors.request.use(
+//     (config) => {
+//         const token = localStorage.getItem("token");
+//         if (token) {
+//             config.headers.Authorization = `Bearer ${token}`;
+//         }
+//         return config;
+//     },
+//     (error) => Promise.reject(error)
+// );
+
 
 export default axiosInstance;

@@ -1,9 +1,8 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import axiosInstance from "../utils/axiosInstance"; // Adjust path if needed
+import { motion } from "framer-motion";
 
-const DoctorRegister = () => {
-  const navigate = useNavigate();
-
+const DoctorRegistration = () => {
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -17,63 +16,172 @@ const DoctorRegister = () => {
     fees: "",
   });
 
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [error, setError] = useState(null);
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError(null);
 
     try {
-      const response = await fetch("https://your-api-endpoint.com/api/doctors/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+      const response = await axiosInstance.post("/doctors/register", formData);
+      console.log("Success:", response.data);
+      setIsSubmitted(true);
+      setFormData({
+        firstName: "",
+        lastName: "",
+        mobileNumber: "",
+        email: "",
+        password: "",
+        specialization: "",
+        experience: "",
+        hospital: "",
+        availability: "",
+        fees: "",
       });
-
-      const data = await response.json();
-
-      if (data.success) {
-        alert("Doctor registered successfully!");
-        navigate("/login");
-      } else {
-        alert(data.message || "Registration failed!");
-      }
-    } catch (error) {
-      console.error("Error registering doctor:", error);
-      alert("Something went wrong!");
+    } catch (err) {
+      console.error("Error:", err.response?.data || err.message);
+      setError(err.response?.data?.message || "Failed to register. Please try again.");
     }
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-        <h2 className="text-2xl font-bold text-center text-blue-600">Doctor Registration</h2>
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 p-6">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="bg-white shadow-lg rounded-lg p-8 w-full max-w-2xl"
+      >
+        <h2 className="text-3xl font-bold text-blue-600 text-center mb-6">
+          Doctor <span className="text-yellow-400">Registration</span>
+        </h2>
 
-        <form className="mt-6" onSubmit={handleSubmit}>
-          <input type="text" name="firstName" placeholder="First Name" value={formData.firstName} onChange={handleChange} className="w-full p-3 mb-3 border rounded-lg" required />
-          <input type="text" name="lastName" placeholder="Last Name" value={formData.lastName} onChange={handleChange} className="w-full p-3 mb-3 border rounded-lg" required />
-          <input type="text" name="mobileNumber" placeholder="Mobile Number" value={formData.mobileNumber} onChange={handleChange} className="w-full p-3 mb-3 border rounded-lg" required />
-          <input type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange} className="w-full p-3 mb-3 border rounded-lg" required />
-          <input type="password" name="password" placeholder="Password" value={formData.password} onChange={handleChange} className="w-full p-3 mb-3 border rounded-lg" required />
+        {isSubmitted ? (
+          <div className="text-green-600 text-center text-lg font-semibold">
+            ✅ Registration Successful! You can now log in.
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <input
+                type="text"
+                name="firstName"
+                value={formData.firstName}
+                onChange={handleChange}
+                placeholder="First Name"
+                required
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none"
+              />
+              <input
+                type="text"
+                name="lastName"
+                value={formData.lastName}
+                onChange={handleChange}
+                placeholder="Last Name"
+                required
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none"
+              />
+            </div>
 
-          <input type="text" name="specialization" placeholder="Specialization (e.g., Gynecologist)" value={formData.specialization} onChange={handleChange} className="w-full p-3 mb-3 border rounded-lg" required />
-          <input type="number" name="experience" placeholder="Experience (Years)" value={formData.experience} onChange={handleChange} className="w-full p-3 mb-3 border rounded-lg" required />
-          <input type="text" name="hospital" placeholder="Hospital Name" value={formData.hospital} onChange={handleChange} className="w-full p-3 mb-3 border rounded-lg" required />
-          <input type="text" name="availability" placeholder="Availability (e.g., Mon-Sat, 9AM-5PM)" value={formData.availability} onChange={handleChange} className="w-full p-3 mb-3 border rounded-lg" required />
-          <input type="number" name="fees" placeholder="Consultation Fees (INR)" value={formData.fees} onChange={handleChange} className="w-full p-3 mb-3 border rounded-lg" required />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <input
+                type="text"
+                name="mobileNumber"
+                value={formData.mobileNumber}
+                onChange={handleChange}
+                placeholder="Mobile Number"
+                required
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none"
+              />
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="Email"
+                required
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none"
+              />
+            </div>
 
-          <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700">
-            Register
-          </button>
-        </form>
+            <input
+              type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              placeholder="Password"
+              required
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none"
+            />
 
-        <p className="text-center text-gray-600 mt-4">
-          Already have an account? <Link to="/login" className="text-blue-600">Login</Link>
-        </p>
-      </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <input
+                type="text"
+                name="specialization"
+                value={formData.specialization}
+                onChange={handleChange}
+                placeholder="Specialization"
+                required
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none"
+              />
+              <input
+                type="number"
+                name="experience"
+                value={formData.experience}
+                onChange={handleChange}
+                placeholder="Experience (Years)"
+                required
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none"
+              />
+            </div>
+
+            <input
+              type="text"
+              name="hospital"
+              value={formData.hospital}
+              onChange={handleChange}
+              placeholder="Hospital"
+              required
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none"
+            />
+
+            <input
+              type="text"
+              name="availability"
+              value={formData.availability}
+              onChange={handleChange}
+              placeholder="Availability (e.g., Mon-Sat, 9 AM - 5 PM)"
+              required
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none"
+            />
+
+            <input
+              type="number"
+              name="fees"
+              value={formData.fees}
+              onChange={handleChange}
+              placeholder="Fees (in ₹)"
+              required
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none"
+            />
+
+            {error && <div className="text-red-500 text-center">{error}</div>}
+
+            <button
+              type="submit"
+              className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-300"
+            >
+              Register
+            </button>
+          </form>
+        )}
+      </motion.div>
     </div>
   );
 };
 
-export default DoctorRegister;
+export default DoctorRegistration;

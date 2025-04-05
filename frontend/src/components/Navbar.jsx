@@ -2,32 +2,35 @@ import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { motion } from "framer-motion";
+import { useAuth } from "../context/AuthContext";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  const { user, logout } = useAuth();
 
   const toggleMenu = () => setIsOpen(!isOpen);
 
   const navLinks = [
     { name: "Home", path: "/" },
     { name: "Doctors", path: "/doctors" },
-    { name: "Appointments", path: "/appointments" },
+    ...(user ? [{ name: "Appointments", path: "/appointments" }] : []),
     { name: "Notifications", path: "/notifications" },
-    { name: "Apply", path: "/apply" },
+   // { name: "Apply", path: "/apply" },
+    ...(!user ? [{ name: "Apply", path: "/apply" }] : []),
     { name: "Contact", path: "/contact" },
-    { name: "Profile", path: "/profile" },
+    
+    ...(user ? [{ name: "Profile", path: "/profile" }] : []),
   ];
 
   return (
     <nav className="fixed top-0 left-0 w-full z-50 bg-transparent">
       <div className="container mx-auto px-6 py-4 flex justify-between items-center bg-blue-600 rounded-bl-lg">
-        {/* Logo */}
         <Link to="/" className="text-2xl font-bold text-white">
           Health<span className="text-yellow-300">Booker</span>
         </Link>
 
-        {/* Desktop Menu */}
+        {/* Desktop NavLinks */}
         <div className="hidden md:flex space-x-6 text-white font-medium">
           {navLinks.map((link) => (
             <Link
@@ -44,23 +47,39 @@ const Navbar = () => {
           ))}
         </div>
 
-        {/* Buttons (Desktop) */}
-        <div className="hidden md:flex space-x-3">
-          <Link
-            to="/login"
-            className="px-4 py-2 border border-yellow-300 text-yellow-300 rounded-lg hover:bg-yellow-300 hover:text-blue-600 transition duration-300"
+        {/* Desktop Right Section */}
+        {user ? (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="hidden md:flex items-center gap-4 text-white"
           >
-            Login
-          </Link>
-          <Link
-            to="/register"
-            className="px-4 py-2 bg-yellow-300 text-blue-600 rounded-lg hover:bg-yellow-400 transition duration-300"
-          >
-            Register
-          </Link>
-        </div>
+            <span className="text-yellow-300 font-semibold">Hi, {user.firstName} 👋</span>
+            <button
+              onClick={logout}
+              className="px-3 py-1 border border-white rounded-lg hover:bg-white hover:text-blue-600 transition"
+            >
+              Logout
+            </button>
+          </motion.div>
+        ) : (
+          <div className="hidden md:flex space-x-3">
+            <Link
+              to="/login"
+              className="px-4 py-2 border border-yellow-300 text-yellow-300 rounded-lg hover:bg-yellow-300 hover:text-blue-600 transition duration-300"
+            >
+              Login
+            </Link>
+            <Link
+              to="/register"
+              className="px-4 py-2 bg-yellow-300 text-blue-600 rounded-lg hover:bg-yellow-400 transition duration-300"
+            >
+              Register
+            </Link>
+          </div>
+        )}
 
-        {/* Mobile Menu Button */}
+        {/* Mobile Menu Toggle */}
         <button className="md:hidden text-white" onClick={toggleMenu}>
           {isOpen ? <X size={28} /> : <Menu size={28} />}
         </button>
@@ -77,7 +96,7 @@ const Navbar = () => {
         />
       )}
 
-      {/* Mobile Menu */}
+      {/* Mobile Slide Menu */}
       <motion.div
         initial={{ x: "100%" }}
         animate={{ x: isOpen ? "0%" : "100%" }}
@@ -103,22 +122,40 @@ const Navbar = () => {
           ))}
         </div>
 
-        {/* Mobile Buttons */}
         <div className="mt-6 flex flex-col space-y-3">
-          <Link
-            to="/login"
-            className="px-4 py-2 border border-yellow-300 text-yellow-300 rounded-lg hover:bg-yellow-300 hover:text-blue-600 transition duration-300 text-center"
-            onClick={toggleMenu}
-          >
-            Login
-          </Link>
-          <Link
-            to="/register"
-            className="px-4 py-2 bg-yellow-300 text-blue-600 rounded-lg hover:bg-yellow-400 transition duration-300 text-center"
-            onClick={toggleMenu}
-          >
-            Register
-          </Link>
+          {user ? (
+            <>
+              <span className="text-yellow-300 font-semibold text-center">
+                Hi, {user.firstName} 👋
+              </span>
+              <button
+                onClick={() => {
+                  logout();
+                  toggleMenu();
+                }}
+                className="px-4 py-2 border border-white text-white rounded-lg hover:bg-white hover:text-blue-600 transition text-center"
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <Link
+                to="/login"
+                className="px-4 py-2 border border-yellow-300 text-yellow-300 rounded-lg hover:bg-yellow-300 hover:text-blue-600 transition text-center"
+                onClick={toggleMenu}
+              >
+                Login
+              </Link>
+              <Link
+                to="/register"
+                className="px-4 py-2 bg-yellow-300 text-blue-600 rounded-lg hover:bg-yellow-400 transition text-center"
+                onClick={toggleMenu}
+              >
+                Register
+              </Link>
+            </>
+          )}
         </div>
       </motion.div>
     </nav>
