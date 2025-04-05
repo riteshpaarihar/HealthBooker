@@ -36,15 +36,7 @@ app.use(
     })
 );
 
-// Debug middleware to print incoming origin
-app.use((req, res, next) => {
-    console.log("🛰️ Incoming request from origin:", req.headers.origin);
-    res.setHeader("Access-Control-Allow-Origin", req.headers.origin || "*");
-    res.setHeader("Access-Control-Allow-Credentials", "true");
-    res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-    res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
-    next();
-});
+
 
 
 // Import routes 
