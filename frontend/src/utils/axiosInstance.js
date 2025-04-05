@@ -1,15 +1,15 @@
-// import axios from "axios";
+import axios from "axios";
 
-// const API_BASE_URL =
-//     import.meta.env.VITE_API_URL || "https://healthbooker.up.railway.app/api";
+const API_BASE_URL =
+    import.meta.env.VITE_API_URL || "https://healthbooker.up.railway.app/api";
 
-// const axiosInstance = axios.create({
-//     baseURL: API_BASE_URL,
-//     headers: {
-//         "Content-Type": "application/x-www-form-urlencoded",
-//     },
-//     withCredentials: true, // Ensure credentials (cookies, etc.) are sent
-// });
+const axiosInstance = axios.create({
+    baseURL: API_BASE_URL,
+    headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+    },
+    withCredentials: true, // Ensure credentials (cookies, etc.) are sent
+});
 
 
 // // ✅ Automatically add the token to every request
@@ -26,20 +26,20 @@
 // export default axiosInstance;
 
 
-import axios from "axios";
+// import axios from "axios";
 
-const API_BASE_URL =
-    import.meta.env.VITE_API_URL || "https://healthbooker.up.railway.app/api";
+// const API_BASE_URL =
+//     import.meta.env.VITE_API_URL || "https://healthbooker.up.railway.app/api";
 
-const axiosInstance = axios.create({
-    baseURL: API_BASE_URL,
-    headers: {
-        "Content-Type": "application/json",
-    },
-    withCredentials: true, // ✅ Ensures cookies are sent
-});
+// const axiosInstance = axios.create({
+//     baseURL: API_BASE_URL,
+//     headers: {
+//         "Content-Type": "application/json",
+//     },
+//     withCredentials: true, // ✅ Ensures cookies are sent
+// });
 
-// ✅ Automatically attach token to every request
+// //✅ Automatically attach token to every request
 // axiosInstance.interceptors.request.use(
 //     (config) => {
 //         const token = localStorage.getItem("token");

@@ -25,7 +25,7 @@ const Register = () => {
 
     try {
       const response = await axiosInstance.post("/user/register", qs.stringify(formData));
-
+          console.log(response);
       toast.success("Registration Successful! Redirecting to login...", {
         position: "top-right",
         autoClose: 2000,
