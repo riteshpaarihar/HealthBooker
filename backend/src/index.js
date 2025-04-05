@@ -23,6 +23,7 @@ app.use(cookieParser());
 //         allowedHeaders: "Content-Type, Authorization",
 //     })
 // );
+
 app.use(
     cors({
         origin: [
@@ -34,7 +35,6 @@ app.use(
         allowedHeaders: "Content-Type, Authorization",
     })
 );
-
 
 
 // Import routes 
