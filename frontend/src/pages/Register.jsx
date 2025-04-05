@@ -20,25 +20,45 @@ const Register = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+
+  //   try {
+  //     const response = await axiosInstance.post("/user/register", qs.stringify(formData));
+  //         console.log(response);
+  //     toast.success("Registration Successful! Redirecting to login...", {
+  //       position: "top-right",
+  //       autoClose: 2000,
+  //     });
+
+  //     setTimeout(() => navigate("/login"), 2500);
+  //   } catch (error) {
+  //     toast.error(
+  //       error.response?.data?.message || "Registration Failed. Try again!",
+  //       { position: "top-right" }
+  //     );
+  //   }
+  // };
+
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    try {
-      const response = await axiosInstance.post("/user/register", qs.stringify(formData));
-          console.log(response);
-      toast.success("Registration Successful! Redirecting to login...", {
-        position: "top-right",
-        autoClose: 2000,
-      });
+  try {
+    const response = await axiosInstance.post("/user/register", formData); // ✅ FIXED
+    console.log(response);
+    toast.success("Registration Successful! Redirecting to login...", {
+      position: "top-right",
+      autoClose: 2000,
+    });
 
-      setTimeout(() => navigate("/login"), 2500);
-    } catch (error) {
-      toast.error(
-        error.response?.data?.message || "Registration Failed. Try again!",
-        { position: "top-right" }
-      );
-    }
-  };
+    setTimeout(() => navigate("/login"), 2500);
+  } catch (error) {
+    toast.error(
+      error.response?.data?.message || "Registration Failed. Try again!",
+      { position: "top-right" }
+    );
+  }
+};
 
   return (
     <div className="max-w-md mx-auto p-6 bg-white shadow-md rounded-lg">

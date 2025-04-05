@@ -106,37 +106,38 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false); // ✅ State for toggling password visibility
 
  
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await axiosInstance.post("/auth/login", { email, password });
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     const response = await axiosInstance.post("/auth/login", { email, password });
   
-      console.log("🔹 Full login response:", response.data);
+  //     console.log("🔹 Full login response:", response.data);
   
-      if (response.data.success && response.data.data?.user) {
-        const userData = response.data.data.user;
-        const token = response.data.data.token;
+  //     if (response.data.success && response.data.data?.user) {
+  //       const userData = response.data.data.user;
+  //         const token = response.data.data.token;
+  //         console.log("�� Token saved:", localStorage.getItem("token"));
+  //         toast.success("Login Successful!", { autoClose: 2000 });
+  //       if (token) {
+  //         localStorage.setItem("token", token);  // ✅ Store token
+  //         console.log("✅ Token saved:", localStorage.getItem("token"));
+  //       } else {
+  //         console.error("❌ No token received from server.");
+  //       }
   
-        if (token) {
-          localStorage.setItem("token", token);  // ✅ Store token
-          console.log("✅ Token saved:", localStorage.getItem("token"));
-        } else {
-          console.error("❌ No token received from server.");
-        }
+  //       login(userData); // ✅ Store user in context
   
-        login(userData); // ✅ Store user in context
-  
-        toast.success("Login Successful!", { autoClose: 2000 });
-        setTimeout(() => navigate("/"), 2000);
-      } else {
-        console.error("❌ Invalid login response:", response.data);
-        toast.error("Invalid login response");
-      }
-    } catch (err) {
-      console.error("❌ Login error:", err.response?.data || err);
-      toast.error(err.response?.data?.message || "Login failed");
-    }
-  };
+  //       toast.success("Login Successful!", { autoClose: 2000 });
+  //       setTimeout(() => navigate("/"), 2000);
+  //     } else {
+  //       console.error("❌ Invalid login response:", response.data);
+  //       toast.error("Invalid login response");
+  //     }
+  //   } catch (err) {
+  //     console.error("❌ Login error:", err.response?.data || err);
+  //     toast.error(err.response?.data?.message || "Login failed");
+  //   }
+  // };
   
 
 //   const handleSubmit = async (e) => {
@@ -164,6 +165,38 @@ const Login = () => {
 //   }
 // };
 
+const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  try {
+    const response = await axiosInstance.post("/auth/login", { email, password });
+
+    console.log("🔹 Full login response:", response.data);
+
+    if (response.data.success && response.data.data?.user) {
+      const userData = response.data.data.user;
+      const token = response.data.token; // ✅ FIXED HERE
+
+      if (token) {
+        localStorage.setItem("token", token);  // ✅ Store token
+        console.log("✅ Token saved:", localStorage.getItem("token"));
+      } else {
+        console.error("❌ No token received from server.");
+      }
+
+      login(userData); // ✅ Store user in context
+
+      toast.success("Login Successful!", { autoClose: 2000 });
+      setTimeout(() => navigate("/"), 2000);
+    } else {
+      console.error("❌ Invalid login response:", response.data);
+      toast.error("Invalid login response");
+    }
+  } catch (err) {
+    console.error("❌ Login error:", err.response?.data || err);
+    toast.error(err.response?.data?.message || "Login failed");
+  }
+};
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-blue-50">

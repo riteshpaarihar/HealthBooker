@@ -8,17 +8,28 @@ import "react-toastify/dist/ReactToastify.css";
 import Loading from "../components/Loading";
 
 const timeSlots = [
-  "09:00 AM - 09:30 AM", "09:30 AM - 10:00 AM", "10:00 AM - 10:30 AM",
-  "10:30 AM - 11:00 AM", "01:00 PM - 01:30 PM", "01:30 PM - 02:00 PM",
-  "02:00 PM - 02:30 PM", "02:30 PM - 03:00 PM", "05:00 PM - 05:30 PM",
-  "05:30 PM - 06:00 PM", "06:00 PM - 06:30 PM", "06:30 PM - 07:00 PM"
+  "09:00 AM - 09:30 AM",
+  "09:30 AM - 10:00 AM",
+  "10:00 AM - 10:30 AM",
+  "10:30 AM - 11:00 AM",
+  "01:00 PM - 01:30 PM",
+  "01:30 PM - 02:00 PM",
+  "02:00 PM - 02:30 PM",
+  "02:30 PM - 03:00 PM",
+  "05:00 PM - 05:30 PM",
+  "05:30 PM - 06:00 PM",
+  "06:00 PM - 06:30 PM",
+  "06:30 PM - 07:00 PM",
 ];
 
 const DoctorsPage = () => {
   const [doctors, setDoctors] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedDoctor, setSelectedDoctor] = useState(null);
-  const [appointmentData, setAppointmentData] = useState({ date: "", timeSlot: "" });
+  const [appointmentData, setAppointmentData] = useState({
+    date: "",
+    timeSlot: "",
+  });
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -31,6 +42,7 @@ const DoctorsPage = () => {
       } finally {
         setLoading(false);
       }
+      ``;
     };
     fetchDoctors();
   }, []);
@@ -39,15 +51,14 @@ const DoctorsPage = () => {
     const userId = localStorage.getItem("userId");
 
     if (!userId) {
-        toast.error("Please log in to book an appointment.");
-        
-        setTimeout(() => {
-          navigate("/login");
-        }, 2000); // Redirect after 2 seconds
-        
-        return;
-      }
-      
+      toast.error("Please log in to book an appointment.");
+
+      setTimeout(() => {
+        navigate("/login");
+      }, 2000); // Redirect after 2 seconds
+
+      return;
+    }
 
     if (!selectedDoctor || !appointmentData.date || !appointmentData.timeSlot) {
       toast.error("Please select a doctor, date, and time slot.");
@@ -55,12 +66,28 @@ const DoctorsPage = () => {
     }
 
     try {
-      await axiosInstance.post("/bookAppointment", {
-        patient: userId,
-        doctor: selectedDoctor._id,
-        date: appointmentData.date,
-        timeSlot: appointmentData.timeSlot,
-      });
+      // await axiosInstance.post("/bookAppointment", {
+      //   patient: userId,
+      //   doctor: selectedDoctor._id,
+      //   date: appointmentData.date,
+      //   timeSlot: appointmentData.timeSlot,
+      // });
+      const token = localStorage.getItem("token");
+
+      await axiosInstance.post(
+        "/bookAppointment",
+        {
+          patient: userId,
+          doctor: selectedDoctor._id,
+          date: appointmentData.date,
+          timeSlot: appointmentData.timeSlot,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       toast.success("Appointment booked successfully!");
       setSelectedDoctor(null);
@@ -74,11 +101,13 @@ const DoctorsPage = () => {
   return (
     <div className="container mx-auto px-6 py-16">
       <ToastContainer position="top-right" autoClose={3000} />
-      
-      <h2 className="text-3xl font-bold text-gray-800 text-center mb-8">Meet Our Doctors</h2>
+
+      <h2 className="text-3xl font-bold text-gray-800 text-center mb-8">
+        Meet Our Doctors
+      </h2>
       {loading ? (
         // <p className="text-center text-gray-600">Loading doctors...</p>
-        <Loading/>
+        <Loading />
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {doctors.map((doctor) => (
@@ -88,7 +117,9 @@ const DoctorsPage = () => {
               whileHover={{ scale: 1.05 }}
             >
               <FaUserMd className="text-blue-600 text-4xl mx-auto" />
-              <h3 className="text-xl font-bold mt-2">{doctor.user.firstName} {doctor.user.lastName}</h3>
+              <h3 className="text-xl font-bold mt-2">
+                {doctor.user.firstName} {doctor.user.lastName}
+              </h3>
               <p className="text-gray-600">{doctor.specialization}</p>
               <p className="text-gray-500 flex items-center justify-center gap-1">
                 <FaHospital /> {doctor.hospital}
@@ -113,28 +144,42 @@ const DoctorsPage = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center px-4">
           <div className="bg-white p-6 rounded-lg w-full max-w-md shadow-lg">
             <h3 className="text-xl font-bold mb-4">
-              Book Appointment with {selectedDoctor.user.firstName} {selectedDoctor.user.lastName}
+              Book Appointment with {selectedDoctor.user.firstName}{" "}
+              {selectedDoctor.user.lastName}
             </h3>
 
             {/* Date Selection */}
-            <label className="block text-sm font-semibold mb-1">Select Date</label>
+            <label className="block text-sm font-semibold mb-1">
+              Select Date
+            </label>
             <input
               type="date"
               className="w-full p-2 border rounded mb-4"
               value={appointmentData.date}
-              onChange={(e) => setAppointmentData({ ...appointmentData, date: e.target.value })}
+              onChange={(e) =>
+                setAppointmentData({ ...appointmentData, date: e.target.value })
+              }
             />
 
             {/* Time Slot Selection (Dropdown) */}
-            <label className="block text-sm font-semibold mb-1">Select Time Slot</label>
+            <label className="block text-sm font-semibold mb-1">
+              Select Time Slot
+            </label>
             <select
               className="w-full p-2 border rounded mb-4"
               value={appointmentData.timeSlot}
-              onChange={(e) => setAppointmentData({ ...appointmentData, timeSlot: e.target.value })}
+              onChange={(e) =>
+                setAppointmentData({
+                  ...appointmentData,
+                  timeSlot: e.target.value,
+                })
+              }
             >
               <option value="">Select Time</option>
               {timeSlots.map((slot, index) => (
-                <option key={index} value={slot}>{slot}</option>
+                <option key={index} value={slot}>
+                  {slot}
+                </option>
               ))}
             </select>
 

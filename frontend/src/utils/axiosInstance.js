@@ -1,7 +1,7 @@
 import axios from "axios";
 
-const API_BASE_URL =
-    import.meta.env.VITE_API_URL || "https://healthbooker.up.railway.app/api";
+const API_BASE_URL =import.meta.env.VITE_API_URL || "https://healthbooker.up.railway.app/api";
+// import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
 const axiosInstance = axios.create({
     baseURL: API_BASE_URL,
@@ -12,18 +12,18 @@ const axiosInstance = axios.create({
 });
 
 
-// // ✅ Automatically add the token to every request
-// axiosInstance.interceptors.request.use(
-//     (config) => {
-//         const token = localStorage.getItem("token"); // Retrieve token
-//         if (token) {
-//             config.headers.Authorization = `Bearer ${token}`; // Attach token
-//         }
-//         return config;
-//     },
-//     (error) => Promise.reject(error)
-// );
-// export default axiosInstance;
+// ✅ Automatically add the token to every request
+axiosInstance.interceptors.request.use(
+    (config) => {
+        const token = localStorage.getItem("token"); // Retrieve token
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`; // Attach token
+        }
+        return config;
+    },
+    (error) => Promise.reject(error)
+);
+export default axiosInstance;
 
 
 // import axios from "axios";
@@ -52,4 +52,4 @@ const axiosInstance = axios.create({
 // );
 
 
-export default axiosInstance;
+// export default axiosInstance;
